@@ -2,13 +2,12 @@ import * as dotenv from "dotenv";
 dotenv.config();
 import express from 'express';
 import db from './src/models';
-import UserController from './src/controllers/user';
+import routes from './src/routes';
 
 const app = express();
 
 app.use(express.json());
-app.post('/', UserController.create);
-app.post('/login', UserController.login);
+app.use(routes);
 
 app.listen(3333, async () => {
     try {
@@ -17,4 +16,4 @@ app.listen(3333, async () => {
     } catch (error) {
         console.log('Error running app: ', error)
     }
-});
+});2
