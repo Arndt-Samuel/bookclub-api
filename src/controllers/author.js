@@ -1,4 +1,5 @@
-import {Author} from '../models'
+import { tr } from 'date-fns/locale';
+import {Author, Book} from '../models'
 import * as Yup from 'yup';
 
 class AuthorController{
@@ -32,6 +33,31 @@ class AuthorController{
             return res.json(authors);
         }
          catch (error) {
+            res.status(400).json({error: error?.message})
+        }
+    }
+
+    async get(req, res){
+        try {
+            const {id} = req.params
+            if(!id){
+                res.status(400).json({error: 'Author id is mandatory'});
+            }
+
+            const author = await Author.findByPk(Number(id), {
+                include: [
+                    {
+                        model: Book,
+                        as: 'book',
+                    },
+                ],
+            });
+            if(!author) {
+                return res.status(200).json({error: 'Author not found'})
+            }
+
+            return res.json(author)
+        } catch (error) {
             res.status(400).json({error: error?.message})
         }
     }
